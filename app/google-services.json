@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "717782757352",
+    "project_id": "mohochat-f5560",
+    "storage_bucket": "mohochat-f5560.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717782757352:android:a29e85762a4d87d7cb3e5d",
+        "android_client_info": {
+          "package_name": "com.example.mohochat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsakpgdwLYJdebYwFM0j-pb18qLmuT1po"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

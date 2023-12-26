@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MohoChat</string>
+    <string name="sign_up">SIGN UP!</string>
+    <string name="need_an_account">Need an account?</string>
+    <string name="login">LOGIN</string>
+</resources>
