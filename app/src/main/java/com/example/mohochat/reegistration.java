@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,12 +43,17 @@ public class reegistration extends AppCompatActivity {
 
     FirebaseDatabase databsae;
     FirebaseStorage storage;
+    ProgressDialog progressDialog;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reegistration);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating The Account");
+        progressDialog.setCancelable(false);
 
         databsae = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -79,10 +85,13 @@ public class reegistration extends AppCompatActivity {
                 String status = "Hey I'm Using This Application";
 
                 if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
+                    progressDialog.dismiss();
                     Toast.makeText(reegistration.this, "Please Enter Valid Information", Toast.LENGTH_SHORT).show();
                 } else if (!email.matches(emailPattern)) {
+                    progressDialog.dismiss();
                     reg_email.setError("Type A Valid Email Here");
                 } else if (password.length()<6) {
+                    progressDialog.dismiss();
                     reg_password.setError("Password Must be in 6 Character or More");
                 }
                 else {
@@ -108,6 +117,7 @@ public class reegistration extends AppCompatActivity {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if(task.isSuccessful()){
+                                                                    progressDialog.show();
                                                                     Intent intent = new Intent(reegistration.this,MainActivity.class);
                                                                     startActivity(intent);
                                                                     finish();
@@ -131,6 +141,7 @@ public class reegistration extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                progressDialog.show();
                                                 Intent intent = new Intent(reegistration.this,MainActivity.class);
                                                 startActivity(intent);
                                                 finish();
