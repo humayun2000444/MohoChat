@@ -30,6 +30,7 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
@@ -38,11 +39,12 @@
                 android:textSize="23.40dp"/>
 
             <TextView
+                android:id="@+id/userStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins_regular"
-                android:textSize="10.40dp"
+                android:textSize="10.40sp"
                 android:text="Status"/>
 
         </LinearLayout>

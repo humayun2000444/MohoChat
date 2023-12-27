@@ -9,8 +9,8 @@
 
     <LinearLayout
         android:id="@+id/toolBar"
-        android:layout_width="325dp"
-        android:layout_height="@dimen/_63sdp"
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="0dp"
@@ -32,35 +32,36 @@
             android:textStyle="bold" />
 
         <ImageView
+            android:id="@+id/logoutImg"
             android:layout_width="@dimen/_28sdp"
             android:layout_height="@dimen/_28sdp"
             android:layout_gravity="center"
-            android:background="@drawable/logout"
-            android:layout_marginRight="@dimen/_10sdp">
-        </ImageView>
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@drawable/logout" />
 
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainUserRecyclerView"
         android:layout_width="367dp"
         android:layout_height="337dp"
         android:layout_below="@+id/toolBar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="140dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginBottom="156dp" />
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="147dp" />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="101dp"
-        android:layout_marginBottom="37dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="44dp"
         android:src="@drawable/sett" />
 
     <ImageView
@@ -68,16 +69,17 @@
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="253dp"
-        android:layout_marginBottom="38dp"
-        android:src="@drawable/camera" />
+        android:layout_marginEnd="176dp"
+        android:layout_marginBottom="45dp"
+        android:src="@drawable/chat" />
 
     <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="177dp"
-        android:layout_marginBottom="38dp"
-        android:src="@drawable/chat" />
+        android:layout_marginEnd="252dp"
+        android:layout_marginBottom="45dp"
+        android:src="@drawable/camera" />
+
 </RelativeLayout>
