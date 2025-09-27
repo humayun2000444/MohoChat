@@ -1,7 +1,12 @@
 package com.example.mohochat;
 
 public class Users {
-    String profilepic,mail,userName,password,userId,lastMessage,status;
+    String profilepic, mail, userName, password, userId, lastMessage, status;
+    String phoneNumber;
+    boolean isOnline;
+    long lastSeen;
+    String about;
+
     public Users(){}
 
     public Users(String id, String userName, String email, String password, String imageUri, String status) {
@@ -11,6 +16,9 @@ public class Users {
         this.password= password;
         this.profilepic = imageUri;
         this.status = status;
+        this.isOnline = false;
+        this.lastSeen = System.currentTimeMillis();
+        this.about = "Hey there! I am using MohoChat.";
     }
 
     public String getProfilepic() { return profilepic;}
@@ -65,4 +73,16 @@ public class Users {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public boolean isOnline() { return isOnline; }
+    public void setOnline(boolean online) { isOnline = online; }
+
+    public long getLastSeen() { return lastSeen; }
+    public void setLastSeen(long lastSeen) { this.lastSeen = lastSeen; }
+
+    public String getAbout() { return about; }
+    public void setAbout(String about) { this.about = about; }
 }

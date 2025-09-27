@@ -95,13 +95,14 @@ public class reegistration extends AppCompatActivity {
                     reg_password.setError("Password Must be in 6 Character or More");
                 }
                 else {
+                    progressDialog.show();
                     auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 String id = Objects.requireNonNull(task.getResult().getUser()).getUid();
-                                DatabaseReference reference =  databsae.getReference().child("user").child("id");
-                                StorageReference storageReference = storage.getReference().child("Upload").child("id");
+                                DatabaseReference reference =  databsae.getReference().child("user").child(id);
+                                StorageReference storageReference = storage.getReference().child("Upload").child(id);
 
                                 if(imageURI!= null){
                                     storageReference.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -117,18 +118,23 @@ public class reegistration extends AppCompatActivity {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if(task.isSuccessful()){
-                                                                    progressDialog.show();
-                                                                    Intent intent = new Intent(reegistration.this,MainActivity.class);
+                                                                    progressDialog.dismiss();
+                                                                    Intent intent = new Intent(reegistration.this,MainActivityNew.class);
                                                                     startActivity(intent);
                                                                     finish();
                                                                 }
                                                                 else {
-                                                                    Toast.makeText(reegistration.this, "Error in Creating The User", Toast.LENGTH_SHORT).show();
+                                                                    progressDialog.dismiss();
+                                                                    Toast.makeText(reegistration.this, "Error in Creating The User: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
                                                         });
                                                     }
                                                 });
+                                            }
+                                            else {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(reegistration.this, "Error uploading image: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -141,19 +147,21 @@ public class reegistration extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                progressDialog.show();
-                                                Intent intent = new Intent(reegistration.this,MainActivity.class);
+                                                progressDialog.dismiss();
+                                                Intent intent = new Intent(reegistration.this,MainActivityNew.class);
                                                 startActivity(intent);
                                                 finish();
                                             }
                                             else {
-                                                Toast.makeText(reegistration.this, "Error in Creating The User", Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
+                                                Toast.makeText(reegistration.this, "Error in Creating The User: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
                                 }
                             }
                             else {
+                                progressDialog.dismiss();
                                 Toast.makeText(reegistration.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

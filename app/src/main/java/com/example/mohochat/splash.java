@@ -11,6 +11,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.lang.annotation.Annotation;
 
 public class splash extends AppCompatActivity {
@@ -39,10 +42,24 @@ public class splash extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(splash.this, reegistration.class);
-                startActivity(intent);
-                finish();
+                checkUserAuthentication();
             }
         },4000);
+    }
+
+    private void checkUserAuthentication() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        Intent intent;
+        if (currentUser != null) {
+            // User is logged in, go to main screen
+            intent = new Intent(splash.this, MainActivityNew.class);
+        } else {
+            // User is not logged in, go to login screen
+            intent = new Intent(splash.this, login.class);
+        }
+        startActivity(intent);
+        finish();
     }
 }

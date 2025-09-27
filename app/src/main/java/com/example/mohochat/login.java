@@ -76,13 +76,14 @@ public class login extends AppCompatActivity {
 
                 }
                 else{
+                    progressDialog.show();
                     auth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                progressDialog.show();
+                                progressDialog.dismiss();
                                 try {
-                                    Intent intent = new Intent(login.this, MainActivity.class);
+                                    Intent intent = new Intent(login.this, MainActivityNew.class);
                                     startActivity(intent);
                                     finish();
                                 }catch (Exception e){
@@ -90,6 +91,7 @@ public class login extends AppCompatActivity {
                                 }
                             }
                             else {
+                                progressDialog.dismiss();
                                 Toast.makeText(login.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
