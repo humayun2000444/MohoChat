@@ -18,23 +18,27 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.example.mohochat.utils.ImageUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileSetupActivity extends AppCompatActivity {
 
-    EditText fullNameInput, phoneInput, aboutInput;
+    EditText phoneInput, aboutInput;
     Button setupCompleteButton;
     CircleImageView profileImage;
-    TextView skipText;
+    TextView skipText, fullNameDisplay;
 
     FirebaseAuth auth;
     FirebaseDatabase database;
     Uri imageUri;
     ProgressDialog progressDialog;
+    String currentFullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +46,12 @@ public class ProfileSetupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_setup);
 
         initViews();
+        loadUserData();
         setupClickListeners();
     }
 
     private void initViews() {
-        fullNameInput = findViewById(R.id.fullNameInput);
+        fullNameDisplay = findViewById(R.id.fullNameDisplay);
         phoneInput = findViewById(R.id.phoneInput);
         aboutInput = findViewById(R.id.aboutInput);
         setupCompleteButton = findViewById(R.id.setupCompleteButton);
@@ -59,6 +64,29 @@ public class ProfileSetupActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Setting up profile...");
         progressDialog.setCancelable(false);
+    }
+
+    private void loadUserData() {
+        String userId = auth.getCurrentUser().getUid();
+        DatabaseReference userRef = database.getReference().child("user").child(userId);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Users user = snapshot.getValue(Users.class);
+                    if (user != null && user.getFullName() != null) {
+                        currentFullName = user.getFullName();
+                        fullNameDisplay.setText("Welcome, " + currentFullName + "!");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ProfileSetupActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupClickListeners() {
@@ -77,14 +105,8 @@ public class ProfileSetupActivity extends AppCompatActivity {
     }
 
     private void completeSetup() {
-        String fullName = fullNameInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
         String about = aboutInput.getText().toString().trim();
-
-        if (TextUtils.isEmpty(fullName)) {
-            fullNameInput.setError("Please enter your full name");
-            return;
-        }
 
         if (TextUtils.isEmpty(phone)) {
             phoneInput.setError("Phone number is required");
@@ -100,8 +122,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
             about = "Hey I'm using MohoChat!";
         }
 
+        if (TextUtils.isEmpty(currentFullName)) {
+            Toast.makeText(this, "Error: Full name not found. Please restart registration.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         progressDialog.show();
-        updateUserProfile(fullName, phone, about);
+        updateUserProfile(currentFullName, phone, about);
     }
 
     private void updateUserProfile(String fullName, String phone, String about) {

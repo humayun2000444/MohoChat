@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12dp"
+    android:height="12dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="@color/primary_accent">
+    <!-- Double checkmark for seen with accent color -->
+    <path
+        android:fillColor="@color/primary_accent"
+        android:pathData="M18,7l-1.41,-1.41L12,10.17L7.41,5.59L6,7l6,6L18,7z"/>
+    <path
+        android:fillColor="@color/primary_accent"
+        android:pathData="M22,7l-1.41,-1.41L16,10.17L11.41,5.59L10,7l6,6L22,7z"/>
+</vector>

@@ -94,6 +94,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
             // Regular chat - load profile image from user data and check online status
             loadProfileImage(holder.profileImage, chat.getChatId());
             checkUserOnlineStatus(holder.onlineIndicator, chat.getChatId());
+            updateLastMessageWithStatus(holder, chat.getChatId(), chat.getLastMessage());
         }
 
         // Show/hide delete button based on delete mode
@@ -201,7 +202,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
 
         // Customize message based on chat type
         String chatName = chat.getReceiverName() != null ? chat.getReceiverName() : "this chat";
-        deleteMessage.setText("Are you sure you want to delete the chat with " + chatName + "?\n\nAll messages will be permanently removed.");
+        if (chat.getReceiverPhone() != null && !chat.getReceiverPhone().isEmpty()) {
+            // SMS invite
+            deleteMessage.setText("Are you sure you want to delete the SMS invite for " + chatName + "?\n\nThis invitation will be permanently removed.");
+        } else {
+            // Regular chat
+            deleteMessage.setText("Are you sure you want to delete the chat with " + chatName + "?\n\nThis will only remove the chat from your side. " + chatName + " will still be able to see the conversation.");
+        }
 
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
@@ -244,115 +251,35 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                     Toast.makeText(context, "Failed to delete SMS invite: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
         } else {
-            // Regular chat - complete deletion from Firebase
+            // Regular chat - only delete from current user's side (WhatsApp-style)
             String receiverId = chat.getChatId(); // chatId is actually receiverId
 
-            // Generate the same chatId format used in ChatActivity
-            String messagesChatId;
-            if (currentUserId.compareTo(receiverId) < 0) {
-                messagesChatId = currentUserId + "_" + receiverId;
-            } else {
-                messagesChatId = receiverId + "_" + currentUserId;
-            }
-
-            // Step 1: Delete all messages for this chat
-            database.child("messages").child(messagesChatId).removeValue()
+            // Only remove chat from current user's chat list
+            // Messages and other user's chat list remain intact
+            database.child("chats").child(currentUserId).child(receiverId).removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    // Step 2: Remove chat from current user's chat list
-                    database.child("chats").child(currentUserId).child(receiverId).removeValue()
-                        .addOnSuccessListener(aVoid2 -> {
-                            // Step 3: Remove chat from receiver's chat list
-                            database.child("chats").child(receiverId).child(currentUserId).removeValue()
-                                .addOnSuccessListener(aVoid3 -> {
-                                    // Step 4: Clean up any notifications related to this chat
-                                    cleanupChatNotifications(database, messagesChatId, currentUserId, receiverId);
+                    // Remove from UI
+                    chatsList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, chatsList.size());
 
-                                    // Step 5: Remove from UI
-                                    chatsList.remove(position);
-                                    notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position, chatsList.size());
-
-                                    Toast.makeText(context, "Chat deleted completely", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(context, "Failed to clean receiver's chat list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(context, "Failed to clean your chat list: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        });
+                    Toast.makeText(context, "Chat deleted from your side", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Failed to delete messages: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Failed to delete chat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
         }
     }
 
-    private void cleanupChatNotifications(DatabaseReference database, String chatId, String currentUserId, String receiverId) {
-        // Query and delete notifications related to this chat
-        database.child("notifications").orderByChild("chatId").equalTo(chatId)
-            .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
-                        // Delete each notification related to this chat
-                        notificationSnapshot.getRef().removeValue();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Non-critical error - notifications cleanup failed but chat is deleted
-                    android.util.Log.w("ChatsAdapter", "Failed to cleanup notifications: " + error.getMessage());
-                }
-            });
-
-        // Also clean up notifications where senderId matches the participants
-        database.child("notifications").orderByChild("senderId").equalTo(currentUserId)
-            .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
-                        Object chatIdValue = notificationSnapshot.child("chatId").getValue();
-                        if (chatIdValue != null && chatIdValue.toString().equals(chatId)) {
-                            notificationSnapshot.getRef().removeValue();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    android.util.Log.w("ChatsAdapter", "Failed to cleanup sender notifications: " + error.getMessage());
-                }
-            });
-
-        database.child("notifications").orderByChild("senderId").equalTo(receiverId)
-            .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
-                        Object chatIdValue = notificationSnapshot.child("chatId").getValue();
-                        if (chatIdValue != null && chatIdValue.toString().equals(chatId)) {
-                            notificationSnapshot.getRef().removeValue();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    android.util.Log.w("ChatsAdapter", "Failed to cleanup receiver notifications: " + error.getMessage());
-                }
-            });
-    }
 
     private void checkUserOnlineStatus(View onlineIndicator, String userId) {
-        DatabaseReference presenceRef = FirebaseDatabase.getInstance().getReference().child("presence").child(userId);
-        presenceRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("user").child(userId);
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String status = snapshot.getValue(String.class);
-                    if ("online".equals(status)) {
+                    Users user = snapshot.getValue(Users.class);
+                    if (user != null && user.isOnline()) {
                         onlineIndicator.setVisibility(View.VISIBLE);
                     } else {
                         onlineIndicator.setVisibility(View.GONE);
@@ -367,6 +294,56 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatViewHold
                 onlineIndicator.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void updateLastMessageWithStatus(ChatViewHolder holder, String userId, String lastMessage) {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("user").child(userId);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Users user = snapshot.getValue(Users.class);
+                    if (user != null && !user.isOnline() && user.getLastSeen() > 0) {
+                        long currentTime = System.currentTimeMillis();
+                        long timeDiff = currentTime - user.getLastSeen();
+                        String lastSeenText = formatLastSeen(timeDiff);
+
+                        // Show last seen instead of last message if user is offline
+                        holder.lastMessage.setText(lastSeenText);
+                        holder.lastMessage.setTextColor(context.getResources().getColor(R.color.secondary_text));
+                    } else {
+                        // Show normal last message for online users
+                        holder.lastMessage.setText(lastMessage);
+                        holder.lastMessage.setTextColor(context.getResources().getColor(R.color.secondary_text));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Fallback to showing last message
+                holder.lastMessage.setText(lastMessage);
+            }
+        });
+    }
+
+    private String formatLastSeen(long timeDiffMillis) {
+        long seconds = timeDiffMillis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        if (minutes < 1) {
+            return "Last seen just now";
+        } else if (minutes < 60) {
+            return "Last seen " + minutes + "m ago";
+        } else if (hours < 24) {
+            return "Last seen " + hours + "h ago";
+        } else if (days < 7) {
+            return "Last seen " + days + "d ago";
+        } else {
+            return "Last seen long ago";
+        }
     }
 
     public static class ChatViewHolder extends RecyclerView.ViewHolder {

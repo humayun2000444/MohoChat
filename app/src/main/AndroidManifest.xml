@@ -76,6 +76,16 @@
             android:name=".services.MessageNotificationService"
             android:exported="false" />
 
+        <!-- Presence Service for online status tracking -->
+        <service
+            android:name=".services.PresenceService"
+            android:exported="false" />
+
+        <!-- Message Status Service for delivery tracking -->
+        <service
+            android:name=".services.MessageStatusService"
+            android:exported="false" />
+
         <!-- Default notification icon and color -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

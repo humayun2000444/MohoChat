@@ -51,12 +51,13 @@
 
                 <ImageView
                     android:id="@+id/messageStatus"
-                    android:layout_width="@dimen/_12sdp"
-                    android:layout_height="@dimen/_12sdp"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:layout_marginStart="@dimen/_4sdp"
-                    android:src="@android:drawable/ic_menu_send"
+                    android:src="@drawable/ic_message_sent"
                     android:tint="@color/white"
-                    android:alpha="0.8" />
+                    android:alpha="0.8"
+                    android:visibility="visible" />
 
             </LinearLayout>
 

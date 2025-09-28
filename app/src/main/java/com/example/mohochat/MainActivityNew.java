@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import com.example.mohochat.adapters.ViewPagerAdapter;
+import com.example.mohochat.services.PresenceService;
 import com.example.mohochat.utils.NotificationHelper;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -46,7 +47,6 @@ public class MainActivityNew extends AppCompatActivity {
         setupViewPager();
         setupSearchFunctionality();
         setupMoreOptionsMenu();
-        updateUserOnlineStatus(true);
 
         // Request notification permission and initialize FCM
         NotificationHelper.requestNotificationPermission(this);
@@ -55,6 +55,14 @@ public class MainActivityNew extends AppCompatActivity {
         // Start message notification service
         Intent notificationServiceIntent = new Intent(this, com.example.mohochat.services.MessageNotificationService.class);
         startService(notificationServiceIntent);
+
+        // Start presence service for online status tracking
+        Intent presenceServiceIntent = new Intent(this, PresenceService.class);
+        startService(presenceServiceIntent);
+
+        // Start message status service for delivery tracking
+        Intent messageStatusServiceIntent = new Intent(this, com.example.mohochat.services.MessageStatusService.class);
+        startService(messageStatusServiceIntent);
     }
 
     private void initViews() {
@@ -101,12 +109,36 @@ public class MainActivityNew extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 } else if (item.getItemId() == R.id.action_logout) {
-                    // Logout functionality
-                    auth.signOut();
-                    Intent intent = new Intent(MainActivityNew.this, login.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+                    // Logout functionality with proper error handling
+                    try {
+                        // Stop all services first
+                        Intent presenceServiceIntent = new Intent(MainActivityNew.this, PresenceService.class);
+                        stopService(presenceServiceIntent);
+
+                        Intent messageStatusServiceIntent = new Intent(MainActivityNew.this, com.example.mohochat.services.MessageStatusService.class);
+                        stopService(messageStatusServiceIntent);
+
+                        Intent notificationServiceIntent = new Intent(MainActivityNew.this, com.example.mohochat.services.MessageNotificationService.class);
+                        stopService(notificationServiceIntent);
+
+                        // Sign out from Firebase
+                        auth.signOut();
+
+                        // Redirect to login
+                        Intent intent = new Intent(MainActivityNew.this, login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } catch (Exception e) {
+                        // Handle any potential errors during logout
+                        android.util.Log.e("MainActivityNew", "Error during logout: " + e.getMessage());
+                        // Still proceed with logout even if there's an error
+                        auth.signOut();
+                        Intent intent = new Intent(MainActivityNew.this, login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
                     return true;
                 }
                 return false;
@@ -116,28 +148,25 @@ public class MainActivityNew extends AppCompatActivity {
         });
     }
 
-    private void updateUserOnlineStatus(boolean isOnline) {
-        if (auth.getCurrentUser() != null) {
-            String userId = auth.getCurrentUser().getUid();
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-                    .child("user").child(userId);
-
-            userRef.child("online").setValue(isOnline);
-            if (!isOnline) {
-                userRef.child("lastSeen").setValue(System.currentTimeMillis());
-            }
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        updateUserOnlineStatus(true);
+        // Restart presence service when app comes to foreground
+        Intent presenceServiceIntent = new Intent(this, PresenceService.class);
+        startService(presenceServiceIntent);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        updateUserOnlineStatus(false);
+        // Don't stop service on pause - let it handle the 2-minute timeout
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Stop presence service when activity is destroyed
+        Intent presenceServiceIntent = new Intent(this, PresenceService.class);
+        stopService(presenceServiceIntent);
     }
 }

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.mohochat.adapters.MessagesAdapter;
 import com.example.mohochat.models.Message;
+import com.example.mohochat.services.PresenceService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -56,6 +57,10 @@ public class ChatActivity extends AppCompatActivity {
         loadReceiverInfo();
         loadMessages();
         setupClickListeners();
+
+        // Start presence service to track user activity
+        Intent presenceServiceIntent = new Intent(this, PresenceService.class);
+        startService(presenceServiceIntent);
     }
 
     private void initViews() {
@@ -93,6 +98,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         messagesAdapter = new MessagesAdapter(this, messagesList, auth.getCurrentUser().getUid());
+        messagesAdapter.setChatId(chatId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         messagesRecyclerView.setLayoutManager(layoutManager);
         messagesRecyclerView.setAdapter(messagesAdapter);
@@ -111,11 +117,7 @@ public class ChatActivity extends AppCompatActivity {
                         contactName.setText(displayName != null ? displayName : "Unknown User");
                     }
 
-                    if (receiverUser.isOnline()) {
-                        contactStatus.setText("Online");
-                    } else {
-                        contactStatus.setText("Last seen recently");
-                    }
+                    updateContactStatus(receiverUser);
 
                     // Use letter avatar fallback for profile images
                     String profileDisplayName = receiverUser.getFullName();
@@ -152,6 +154,11 @@ public class ChatActivity extends AppCompatActivity {
                     Message message = dataSnapshot.getValue(Message.class);
                     if (message != null) {
                         messagesList.add(message);
+                        // Mark messages from receiver as seen
+                        if (!message.getSenderId().equals(auth.getCurrentUser().getUid()) &&
+                            !message.isSeen()) {
+                            markMessageAsSeen(message.getMessageId());
+                        }
                     }
                 }
                 messagesAdapter.notifyDataSetChanged();
@@ -190,6 +197,9 @@ public class ChatActivity extends AppCompatActivity {
 
         Message message = new Message(messageId, currentUserId, receiverId,
                 messageText, "text", timestamp, chatId);
+
+        // Explicitly set message status to sent
+        message.setMessageStatus("sent");
 
         // Save message
         database.child("messages").child(chatId).child(messageId).setValue(message)
@@ -300,5 +310,57 @@ public class ChatActivity extends AppCompatActivity {
 
             database.child("notifications").child(notificationId).setValue(notificationData);
         }
+    }
+
+    private void updateContactStatus(Users user) {
+        if (user == null) return;
+
+        if (user.isOnline()) {
+            contactStatus.setText("Online");
+        } else {
+            long lastSeenTime = user.getLastSeen();
+            if (lastSeenTime > 0) {
+                long currentTime = System.currentTimeMillis();
+                long timeDiff = currentTime - lastSeenTime;
+
+                String lastSeenText = formatLastSeen(timeDiff);
+                contactStatus.setText(lastSeenText);
+            } else {
+                contactStatus.setText("Last seen recently");
+            }
+        }
+    }
+
+    private String formatLastSeen(long timeDiffMillis) {
+        long seconds = timeDiffMillis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+
+        if (minutes < 1) {
+            return "Last seen just now";
+        } else if (minutes < 60) {
+            return "Last seen " + minutes + " minutes ago";
+        } else if (hours < 24) {
+            return "Last seen " + hours + " hours ago";
+        } else if (days < 7) {
+            return "Last seen " + days + " days ago";
+        } else {
+            return "Last seen a long time ago";
+        }
+    }
+
+    private void markMessageAsSeen(String messageId) {
+        database.child("messages").child(chatId).child(messageId)
+                .child("seen").setValue(true);
+        database.child("messages").child(chatId).child(messageId)
+                .child("messageStatus").setValue("seen");
+    }
+
+    private void markMessageAsDelivered(String messageId) {
+        database.child("messages").child(chatId).child(messageId)
+                .child("delivered").setValue(true);
+        database.child("messages").child(chatId).child(messageId)
+                .child("messageStatus").setValue("delivered");
     }
 }

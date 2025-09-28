@@ -307,21 +307,6 @@
                     app:iconTint="@color/primary_accent"
                     app:iconGravity="textStart" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/logout"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_48sdp"
-                    android:text="Logout"
-                    android:textColor="@color/warning_red"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
-                    app:strokeColor="@color/warning_red"
-                    app:strokeWidth="2dp"
-                    app:cornerRadius="@dimen/_12sdp"
-                    app:icon="@android:drawable/ic_menu_close_clear_cancel"
-                    app:iconTint="@color/warning_red"
-                    app:iconGravity="textStart" />
 
             </LinearLayout>
 

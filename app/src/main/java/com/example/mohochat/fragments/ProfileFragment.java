@@ -37,7 +37,7 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView profileImage;
     private TextView userName, userEmail, userAbout, userPhone;
-    private TextView editProfile, logout;
+    private TextView editProfile;
 
     private DatabaseReference database;
     private FirebaseAuth auth;
@@ -67,7 +67,6 @@ public class ProfileFragment extends Fragment {
         userAbout = view.findViewById(R.id.userAbout);
         userPhone = view.findViewById(R.id.userPhone);
         editProfile = view.findViewById(R.id.editProfile);
-        logout = view.findViewById(R.id.logout);
 
         database = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
@@ -77,16 +76,17 @@ public class ProfileFragment extends Fragment {
         profileImage.setOnClickListener(v -> selectImage());
 
         editProfile.setOnClickListener(v -> showEditProfileDialog());
-
-        logout.setOnClickListener(v -> {
-            auth.signOut();
-            Intent intent = new Intent(getContext(), login.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        });
     }
 
     private void loadUserProfile() {
+        if (auth.getCurrentUser() == null) {
+            // User not authenticated, redirect to login
+            Intent intent = new Intent(getContext(), login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return;
+        }
+
         String currentUserId = auth.getCurrentUser().getUid();
         database.child("user").child(currentUserId)
                 .addValueEventListener(new ValueEventListener() {
@@ -100,7 +100,18 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    if (error.getCode() == DatabaseError.PERMISSION_DENIED) {
+                        // Permission denied - user might need to re-authenticate
+                        Toast.makeText(getContext(), "Authentication expired. Please login again.", Toast.LENGTH_LONG).show();
+                        auth.signOut();
+                        Intent intent = new Intent(getContext(), login.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getContext(), "Failed to load profile: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -156,16 +167,24 @@ public class ProfileFragment extends Fragment {
                                 base64Image,
                                 displayName
                             );
-                            Toast.makeText(getContext(), "Profile picture updated", Toast.LENGTH_SHORT).show();
+                            if (getContext() != null) {
+                                Toast.makeText(getContext(), "Profile picture updated", Toast.LENGTH_SHORT).show();
+                            }
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "Failed to update profile picture", Toast.LENGTH_SHORT).show();
+                            if (getContext() != null) {
+                                Toast.makeText(getContext(), "Failed to update profile picture", Toast.LENGTH_SHORT).show();
+                            }
                         });
             } else {
-                Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (getContext() != null) {
+                Toast.makeText(getContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -214,7 +233,9 @@ public class ProfileFragment extends Fragment {
         database.child("user").child(currentUserId).child("userName").setValue(newName);
         database.child("user").child(currentUserId).child("about").setValue(newAbout)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    }
                     // Update current user object and UI
                     currentUser.setFullName(newName);
                     currentUser.setUserName(newName);
@@ -222,7 +243,9 @@ public class ProfileFragment extends Fragment {
                     updateUI();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    if (getContext() != null) {
+                        Toast.makeText(getContext(), "Failed to update profile", Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 }

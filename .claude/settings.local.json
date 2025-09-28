@@ -3,7 +3,8 @@
     "allow": [
       "Bash(./gradlew:*)",
       "Bash(.gradlew assembleDebug)",
-      "Bash(gradlew:*)"
+      "Bash(gradlew:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

@@ -10,6 +10,8 @@ public class Message {
     private String fileUrl;
     private long timestamp;
     private boolean isSeen;
+    private boolean isDelivered;
+    private String messageStatus; // sent, delivered, seen
     private String chatId;
 
     public Message() {}
@@ -24,6 +26,8 @@ public class Message {
         this.timestamp = timestamp;
         this.chatId = chatId;
         this.isSeen = false;
+        this.isDelivered = false;
+        this.messageStatus = "sent";
     }
 
     // Getters and Setters
@@ -56,4 +60,10 @@ public class Message {
 
     public String getChatId() { return chatId; }
     public void setChatId(String chatId) { this.chatId = chatId; }
+
+    public boolean isDelivered() { return isDelivered; }
+    public void setDelivered(boolean delivered) { isDelivered = delivered; }
+
+    public String getMessageStatus() { return messageStatus; }
+    public void setMessageStatus(String messageStatus) { this.messageStatus = messageStatus; }
 }
