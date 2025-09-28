@@ -44,32 +44,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Find contacts by email or phone number"
+            android:text="Add new contact"
             android:textColor="@color/black"
             android:textSize="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_24sdp" />
 
         <EditText
-            android:id="@+id/emailOrPhoneInput"
+            android:id="@+id/contactNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bordermain"
-            android:hint="Enter email or phone number"
-            android:inputType="textEmailAddress"
+            android:hint="Contact Name"
+            android:inputType="textPersonName"
             android:padding="@dimen/_16sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp"
             android:layout_marginBottom="@dimen/_16sdp" />
 
-        <Button
-            android:id="@+id/searchButton"
+        <EditText
+            android:id="@+id/contactPhoneInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_500"
-            android:text="Search User"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_16sdp"
+            android:background="@drawable/bordermain"
+            android:hint="Phone Number"
+            android:inputType="phone"
+            android:padding="@dimen/_16sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
             android:layout_marginBottom="@dimen/_16sdp" />
+
 
         <Button
             android:id="@+id/addContactButton"
@@ -78,14 +81,13 @@
             android:background="@color/purple_500"
             android:text="Add Contact"
             android:textColor="@color/white"
-            android:textSize="@dimen/_16sdp"
-            android:enabled="false" />
+            android:textSize="@dimen/_16sdp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_24sdp"
-            android:text="Instructions:\n• Enter the exact email or phone number\n• The user must be registered on MohoChat\n• You cannot add yourself as a contact"
+            android:text="Instructions:\n• Enter contact name and phone number\n• The contact will be added to your phone contacts\n• You can invite them to use MohoChat"
             android:textColor="@color/black"
             android:textSize="@dimen/_12sdp"
             android:lineSpacingExtra="@dimen/_4sdp" />

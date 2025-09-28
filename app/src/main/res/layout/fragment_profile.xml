@@ -1,182 +1,337 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/main_background">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/_16sdp">
+        android:background="@color/primary_accent"
+        app:elevation="0dp">
 
-        <!-- Profile Picture Section -->
-        <LinearLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingVertical="@dimen/_24sdp">
+            android:layout_height="@dimen/_200sdp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/primary_accent"
+            app:expandedTitleGravity="center|bottom">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileImage"
-                android:layout_width="@dimen/_120sdp"
-                android:layout_height="@dimen/_120sdp"
-                android:src="@drawable/ic_launcher_foreground" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:layout_collapseMode="parallax">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:text="Tap to change profile photo"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_12sdp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_120sdp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_launcher_foreground"
+                    app:civ_border_width="4dp"
+                    app:civ_border_color="@color/white" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profileImage"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Tap to change photo"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:alpha="0.8" />
 
-        <!-- User Info Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bordermain"
-            android:padding="@dimen/_16sdp"
-            android:layout_marginVertical="@dimen/_8sdp">
+            </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="User Name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        </LinearLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/bordermain"
-            android:padding="@dimen/_16sdp"
-            android:layout_marginVertical="@dimen/_8sdp">
+            android:padding="@dimen/_16sdp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="About"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/userAbout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="Hey there! I am using MohoChat."
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bordermain"
-            android:padding="@dimen/_16sdp"
-            android:layout_marginVertical="@dimen/_8sdp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/userEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="user@example.com"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/bordermain"
-            android:padding="@dimen/_16sdp"
-            android:layout_marginVertical="@dimen/_8sdp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/userPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:text="+1234567890"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp" />
-
-        </LinearLayout>
-
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/_24sdp">
-
-            <TextView
-                android:id="@+id/editProfile"
+            <!-- User Name Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bordermain"
-                android:gravity="center"
-                android:padding="@dimen/_16sdp"
-                android:text="Edit Profile"
-                android:textColor="@color/purple_500"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/_8sdp" />
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
 
-            <TextView
-                android:id="@+id/logout"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_16sdp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:tint="@color/primary_accent"
+                        android:layout_marginEnd="@dimen/_16sdp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/userName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2sdp"
+                            android:text="User Name"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/_16sdp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- About Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bordermain"
-                android:gravity="center"
-                android:padding="@dimen/_16sdp"
-                android:text="Logout"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_16sdp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        android:tint="@color/primary_accent"
+                        android:layout_marginEnd="@dimen/_16sdp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="About"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/userAbout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_2sdp"
+                            android:text="Hey there! I am using MohoChat."
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/_14sdp"
+                            android:lineSpacingExtra="2dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Contact Info Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_16sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contact Information"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/_16sdp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/_12sdp" />
+
+                    <!-- Email -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="@dimen/_8sdp">
+
+                        <ImageView
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:src="@android:drawable/ic_dialog_email"
+                            android:tint="@color/secondary_text"
+                            android:layout_marginEnd="@dimen/_12sdp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Email"
+                                android:textColor="@color/secondary_text"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <TextView
+                                android:id="@+id/userEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="user@example.com"
+                                android:textColor="@color/primary_text"
+                                android:textSize="@dimen/_14sdp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/secondary_text"
+                        android:alpha="0.2"
+                        android:layout_marginVertical="@dimen/_4sdp" />
+
+                    <!-- Phone -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="@dimen/_8sdp">
+
+                        <ImageView
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:src="@android:drawable/ic_menu_call"
+                            android:tint="@color/secondary_text"
+                            android:layout_marginEnd="@dimen/_12sdp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phone"
+                                android:textColor="@color/secondary_text"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <TextView
+                                android:id="@+id/userPhone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+1234567890"
+                                android:textColor="@color/primary_text"
+                                android:textSize="@dimen/_14sdp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_8sdp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editProfile"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_48sdp"
+                    android:layout_marginBottom="@dimen/_12sdp"
+                    android:text="Edit Profile"
+                    android:textColor="@color/primary_accent"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/primary_accent"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="@dimen/_12sdp"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconTint="@color/primary_accent"
+                    app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/logout"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_48sdp"
+                    android:text="Logout"
+                    android:textColor="@color/warning_red"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold"
+                    app:strokeColor="@color/warning_red"
+                    app:strokeWidth="2dp"
+                    app:cornerRadius="@dimen/_12sdp"
+                    app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                    app:iconTint="@color/warning_red"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+
+            <!-- Bottom padding for better scrolling -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_24sdp" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -29,6 +29,10 @@ public class login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Apply theme before setting content view
+        SettingsActivity.applyTheme(this);
+
         setContentView(R.layout.activity_login);
 
         progressDialog = new ProgressDialog(this);

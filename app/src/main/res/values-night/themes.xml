@@ -1,7 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- MohoChat Dark Mode Theme -->
     <style name="Base.Theme.MohoChat" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Primary Colors (same accent colors for consistency) -->
+        <item name="colorPrimary">@color/primary_accent</item>
+        <item name="colorPrimaryVariant">@color/secondary_accent</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary Colors -->
+        <item name="colorSecondary">@color/secondary_accent</item>
+        <item name="colorSecondaryVariant">@color/primary_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Dark Background Colors -->
+        <item name="android:windowBackground">@color/main_background</item>
+        <item name="colorSurface">@color/surface_background</item>
+        <item name="colorOnSurface">@color/primary_text</item>
+
+        <!-- Dark Status Bar -->
+        <item name="android:statusBarColor">@color/main_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Dark Navigation Bar -->
+        <item name="android:navigationBarColor">@color/main_background</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- Dark Text Colors -->
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+
+        <!-- Button Styles -->
+        <item name="materialButtonStyle">@style/MohoChat.Button</item>
+        <item name="borderlessButtonStyle">@style/MohoChat.Button.Borderless</item>
     </style>
 </resources>

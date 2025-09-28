@@ -3,12 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/main_background">
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_8sdp"
+        android:hint="Search contacts..."
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="@dimen/_8sdp"
+        android:padding="@dimen/_12sdp"
+        android:background="@drawable/bordermain"
+        android:textColor="@color/primary_text"
+        android:textColorHint="@color/secondary_text"
+        android:textSize="@dimen/_14sdp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/searchEditText"
         android:padding="@dimen/_8sdp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,16 +35,16 @@
         android:layout_margin="@dimen/_16sdp"
         android:src="@android:drawable/ic_input_add"
         app:tint="@color/white"
-        app:backgroundTint="@color/purple_500" />
+        app:backgroundTint="@color/primary_accent" />
 
     <TextView
         android:id="@+id/noContactsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No contacts yet\nTap + to add contacts"
+        android:text="No contacts found\nAdd contacts to your phone first"
         android:textAlignment="center"
-        android:textColor="@color/black"
+        android:textColor="@color/secondary_text"
         android:textSize="@dimen/_16sdp"
         android:visibility="gone" />
 

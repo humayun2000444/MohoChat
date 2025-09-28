@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/main_background"
     tools:context=".MainActivity">
 
     <!-- Top Toolbar -->
@@ -12,7 +13,7 @@
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_56sdp"
-        android:background="@color/purple_500"
+        android:background="@color/surface_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/_16sdp">
@@ -23,7 +24,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/poppins_bold"
             android:text="MohoChat"
-            android:textColor="@color/white"
+            android:textColor="@color/primary_text"
             android:textSize="@dimen/_20sdp"
             android:textStyle="bold" />
 
@@ -34,7 +35,7 @@
             android:layout_marginEnd="@dimen/_12sdp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_search"
-            android:tint="@color/white" />
+            android:tint="@color/secondary_accent" />
 
         <ImageView
             android:id="@+id/moreOptionsIcon"
@@ -42,7 +43,7 @@
             android:layout_height="@dimen/_24sdp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_more"
-            android:tint="@color/white" />
+            android:tint="@color/secondary_accent" />
 
     </LinearLayout>
 
@@ -51,12 +52,12 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_48sdp"
-        android:background="@color/purple_500"
+        android:background="@color/surface_background"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/white"
-        app:tabTextColor="@color/white"
-        app:tabIndicatorColor="@color/white" />
+        app:tabSelectedTextColor="@color/primary_accent"
+        app:tabTextColor="@color/secondary_text"
+        app:tabIndicatorColor="@color/primary_accent" />
 
     <!-- ViewPager2 for fragments -->
     <androidx.viewpager2.widget.ViewPager2

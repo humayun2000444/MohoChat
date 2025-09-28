@@ -21,9 +21,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
+import com.example.mohochat.utils.ProfileImageLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,7 +42,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference database;
     private FirebaseAuth auth;
 
-    private String receiverId, chatId;
+    private String receiverId, chatId, receiverName;
     private Users receiverUser;
 
     @Override
@@ -74,6 +75,7 @@ public class ChatActivity extends AppCompatActivity {
     private void getIntentData() {
         Intent intent = getIntent();
         receiverId = intent.getStringExtra("receiverId");
+        receiverName = intent.getStringExtra("receiverName");
 
         // Generate chat ID (combination of both user IDs in alphabetical order)
         String currentUserId = auth.getCurrentUser().getUid();
@@ -81,6 +83,11 @@ public class ChatActivity extends AppCompatActivity {
             chatId = currentUserId + "_" + receiverId;
         } else {
             chatId = receiverId + "_" + currentUserId;
+        }
+
+        // Set receiver name immediately if provided
+        if (receiverName != null && !receiverName.isEmpty()) {
+            contactName.setText(receiverName);
         }
     }
 
@@ -98,7 +105,11 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 receiverUser = snapshot.getValue(Users.class);
                 if (receiverUser != null) {
-                    contactName.setText(receiverUser.getUserName());
+                    // Use fullName if available, otherwise userName, otherwise keep existing receiverName
+                    String displayName = receiverUser.getUserName();
+                    if (receiverName == null || receiverName.isEmpty()) {
+                        contactName.setText(displayName != null ? displayName : "Unknown User");
+                    }
 
                     if (receiverUser.isOnline()) {
                         contactStatus.setText("Online");
@@ -106,9 +117,21 @@ public class ChatActivity extends AppCompatActivity {
                         contactStatus.setText("Last seen recently");
                     }
 
-                    if (receiverUser.getProfilepic() != null && !receiverUser.getProfilepic().isEmpty()) {
-                        Picasso.get().load(receiverUser.getProfilepic()).into(contactProfilePic);
+                    // Use letter avatar fallback for profile images
+                    String profileDisplayName = receiverUser.getFullName();
+                    if (profileDisplayName == null || profileDisplayName.isEmpty()) {
+                        profileDisplayName = receiverUser.getUserName();
                     }
+                    if (profileDisplayName == null || profileDisplayName.isEmpty()) {
+                        profileDisplayName = "Unknown User";
+                    }
+
+                    ProfileImageLoader.loadProfileImageWithLetterFallback(
+                        ChatActivity.this,
+                        contactProfilePic,
+                        receiverUser.getProfilepic(),
+                        profileDisplayName
+                    );
                 }
             }
 
@@ -173,6 +196,8 @@ public class ChatActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     messageInput.setText("");
                     updateLastMessage(messageText, timestamp);
+                    // Send notification to receiver
+                    sendNotificationToReceiver(messageText);
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(ChatActivity.this, "Failed to send message", Toast.LENGTH_SHORT).show();
@@ -183,10 +208,97 @@ public class ChatActivity extends AppCompatActivity {
         // Update chat info for both users
         String currentUserId = auth.getCurrentUser().getUid();
 
-        database.child("chats").child(currentUserId).child(chatId).child("lastMessage").setValue(lastMessage);
-        database.child("chats").child(currentUserId).child(chatId).child("lastMessageTime").setValue(timestamp);
+        // Create/update chat for current user
+        DatabaseReference currentUserChatRef = database.child("chats").child(currentUserId).child(receiverId);
+        currentUserChatRef.child("lastMessage").setValue(lastMessage);
+        currentUserChatRef.child("lastMessageTime").setValue(timestamp);
+        currentUserChatRef.child("timestamp").setValue(timestamp);
+        currentUserChatRef.child("chatId").setValue(receiverId);
+        currentUserChatRef.child("receiverName").setValue(receiverName != null ? receiverName : "Unknown User");
 
-        database.child("chats").child(receiverId).child(chatId).child("lastMessage").setValue(lastMessage);
-        database.child("chats").child(receiverId).child(chatId).child("lastMessageTime").setValue(timestamp);
+        // Create/update chat for receiver
+        DatabaseReference receiverChatRef = database.child("chats").child(receiverId).child(currentUserId);
+        receiverChatRef.child("lastMessage").setValue(lastMessage);
+        receiverChatRef.child("lastMessageTime").setValue(timestamp);
+        receiverChatRef.child("timestamp").setValue(timestamp);
+        receiverChatRef.child("chatId").setValue(currentUserId);
+
+        // Get current user name for receiver's chat list
+        database.child("user").child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String currentUserName = snapshot.child("fullName").getValue(String.class);
+                    if (currentUserName == null) {
+                        currentUserName = snapshot.child("userName").getValue(String.class);
+                    }
+                    receiverChatRef.child("receiverName").setValue(currentUserName != null ? currentUserName : "Unknown User");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error
+            }
+        });
+    }
+
+    private void sendNotificationToReceiver(String messageText) {
+        // Get receiver's FCM token and send notification
+        database.child("user").child(receiverId).child("fcmToken")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String fcmToken = snapshot.getValue(String.class);
+                        if (fcmToken != null && !fcmToken.isEmpty()) {
+                            // Get current user's name
+                            String currentUserId = auth.getCurrentUser().getUid();
+                            database.child("user").child(currentUserId)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String senderName = snapshot.child("fullName").getValue(String.class);
+                                            if (senderName == null) {
+                                                senderName = snapshot.child("userName").getValue(String.class);
+                                            }
+                                            if (senderName == null) senderName = "Unknown User";
+
+                                            // Send notification via Firebase Functions or server
+                                            sendFCMNotification(fcmToken, senderName, messageText, currentUserId);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            // Handle error
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error
+                    }
+                });
+    }
+
+    private void sendFCMNotification(String fcmToken, String senderName, String message, String senderId) {
+        // Create notification payload in Firebase database for cloud function processing
+        // This approach works without needing a separate server
+        String notificationId = database.child("notifications").push().getKey();
+
+        if (notificationId != null) {
+            HashMap<String, Object> notificationData = new HashMap<>();
+            notificationData.put("targetToken", fcmToken);
+            notificationData.put("title", senderName);
+            notificationData.put("body", message);
+            notificationData.put("senderId", senderId);
+            notificationData.put("senderName", senderName);
+            notificationData.put("chatId", chatId);
+            notificationData.put("timestamp", System.currentTimeMillis());
+            notificationData.put("processed", false);
+
+            database.child("notifications").child(notificationId).setValue(notificationData);
+        }
     }
 }

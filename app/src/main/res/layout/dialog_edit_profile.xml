@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_16sdp" />
+
+    <!-- Name Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_16sdp"
+        app:boxStrokeColor="@color/primary_accent"
+        app:hintTextColor="@color/primary_accent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            android:inputType="textPersonName"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_14sdp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- About Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20sdp"
+        app:boxStrokeColor="@color/primary_accent"
+        app:hintTextColor="@color/primary_accent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="About"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_14sdp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="Cancel"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_14sdp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp"
+            android:backgroundTint="@color/primary_accent"
+            app:cornerRadius="@dimen/_8sdp" />
+
+    </LinearLayout>
+
+</LinearLayout>

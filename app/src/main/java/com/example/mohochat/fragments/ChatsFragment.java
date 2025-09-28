@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mohochat.R;
 import com.example.mohochat.adapters.ChatsAdapter;
 import com.example.mohochat.models.Chat;
+import com.example.mohochat.models.ChatFromSMS;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,17 +62,49 @@ public class ChatsFragment extends Fragment {
 
     private void loadChats() {
         String currentUserId = auth.getCurrentUser().getUid();
-        database.child("chats").orderByChild("participants/" + currentUserId)
-                .equalTo(true).addValueEventListener(new ValueEventListener() {
+
+        // Load all chats for current user (both SMS and message chats)
+        database.child("chats").child(currentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatsList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Chat chat = dataSnapshot.getValue(Chat.class);
-                    if (chat != null) {
+
+                for (DataSnapshot chatSnapshot : snapshot.getChildren()) {
+                    // Try to parse as ChatFromSMS first (for SMS invites)
+                    ChatFromSMS smsChat = chatSnapshot.getValue(ChatFromSMS.class);
+                    if (smsChat != null && "sms_invite".equals(smsChat.getType())) {
+                        // SMS Chat
+                        Chat chat = new Chat();
+                        chat.setChatId(smsChat.getChatId());
+                        chat.setLastMessage(smsChat.getLastMessage());
+                        chat.setTimestamp(smsChat.getTimestamp());
+                        chat.setReceiverName(smsChat.getContactName());
+                        chat.setReceiverPhone(smsChat.getReceiverPhone());
+                        chat.setChatType("sms_invite");
                         chatsList.add(chat);
+                    } else {
+                        // Regular message chat - parse as generic data
+                        String receiverId = chatSnapshot.getKey();
+                        String lastMessage = chatSnapshot.child("lastMessage").getValue(String.class);
+                        String receiverName = chatSnapshot.child("receiverName").getValue(String.class);
+                        Long timestamp = chatSnapshot.child("timestamp").getValue(Long.class);
+                        Long lastMessageTime = chatSnapshot.child("lastMessageTime").getValue(Long.class);
+
+                        if (lastMessage != null && (timestamp != null || lastMessageTime != null)) {
+                            Chat chat = new Chat();
+                            chat.setChatId(receiverId);
+                            chat.setLastMessage(lastMessage);
+                            chat.setTimestamp(timestamp != null ? timestamp : lastMessageTime);
+                            chat.setReceiverName(receiverName != null ? receiverName : "Unknown User");
+                            chat.setChatType("message");
+                            chatsList.add(chat);
+                        }
                     }
                 }
+
+                // Sort chats by timestamp (newest first)
+                chatsList.sort((c1, c2) -> Long.compare(c2.getTimestamp(), c1.getTimestamp()));
+
                 chatsAdapter.notifyDataSetChanged();
             }
 
@@ -81,4 +114,32 @@ public class ChatsFragment extends Fragment {
             }
         });
     }
+
+    private void loadReceiverInfo(Chat chat, String receiverId) {
+        database.child("user").child(receiverId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Try fullName first (from profile setup), then userName (from registration)
+                    String receiverName = snapshot.child("fullName").getValue(String.class);
+                    if (receiverName == null || receiverName.isEmpty()) {
+                        receiverName = snapshot.child("userName").getValue(String.class);
+                    }
+                    if (receiverName == null || receiverName.isEmpty()) {
+                        // Fallback to phone number if no name found
+                        String phone = snapshot.child("phoneNumber").getValue(String.class);
+                        receiverName = phone != null ? phone : "Unknown User";
+                    }
+                    chat.setReceiverName(receiverName);
+                    chatsAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error
+            }
+        });
+    }
+
 }

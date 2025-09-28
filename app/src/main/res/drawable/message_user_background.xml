@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="@color/light_message_bubble_user_gradient_start"
+        android:endColor="@color/light_message_bubble_user_gradient_end"
+        android:angle="45" />
+    <corners
+        android:bottomLeftRadius="18dp"
+        android:bottomRightRadius="4dp"
+        android:topLeftRadius="18dp"
+        android:topRightRadius="18dp" />
+</shape>

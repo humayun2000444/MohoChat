@@ -5,4 +5,34 @@
     <color name="purple_500">#FF6200EE</color>
     <color name="gray_200">#FFEEEEEE</color>
     <color name="grey">#FF888888</color>
+
+    <!-- MohoChat Core Color Palette (Consistent in Both Modes) -->
+    <color name="primary_accent">#FF9F68</color>
+    <color name="secondary_accent">#7F68FF</color>
+    <color name="success_green">#68FF9F</color>
+    <color name="warning_red">#FF687F</color>
+    <color name="online_green">#4CAF50</color>
+
+    <!-- Light Mode Theme Colors -->
+    <color name="light_primary_background">#F7F5F0</color>
+    <color name="light_secondary_background">#E3EBF3</color>
+    <color name="light_primary_text">#333333</color>
+    <color name="light_secondary_text">#707070</color>
+    <color name="light_message_bubble_other">#FFFFFF</color>
+    <color name="light_message_bubble_user_gradient_start">#FF9F68</color>
+    <color name="light_message_bubble_user_gradient_end">#FFD6C1</color>
+
+    <!-- Dark Mode Theme Colors -->
+    <color name="dark_primary_background">#1A1E29</color>
+    <color name="dark_secondary_background">#222938</color>
+    <color name="dark_primary_text">#F0F0F0</color>
+    <color name="dark_secondary_text">#A0A0A0</color>
+    <color name="dark_message_bubble_other">#3A4452</color>
+    <color name="dark_message_bubble_user">#FF9F68</color>
+
+    <!-- Unified Theme Colors (for current theme) -->
+    <color name="main_background">@color/light_primary_background</color>
+    <color name="surface_background">@color/light_secondary_background</color>
+    <color name="primary_text">@color/light_primary_text</color>
+    <color name="secondary_text">@color/light_secondary_text</color>
 </resources>

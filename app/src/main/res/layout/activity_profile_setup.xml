@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="@dimen/_24sdp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Complete Your Profile"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_24sdp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_32sdp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:src="@drawable/photocamera"
+        android:layout_marginBottom="@dimen/_24sdp"
+        android:background="?android:attr/selectableItemBackgroundBorderless" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap to add profile picture"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_32sdp" />
+
+    <EditText
+        android:id="@+id/fullNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:background="@drawable/bordermain"
+        android:padding="@dimen/_16sdp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sdp"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="@dimen/_16sdp" />
+
+    <EditText
+        android:id="@+id/phoneInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number*"
+        android:background="@drawable/bordermain"
+        android:padding="@dimen/_16sdp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sdp"
+        android:inputType="phone"
+        android:layout_marginBottom="@dimen/_16sdp" />
+
+    <EditText
+        android:id="@+id/aboutInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="About (Optional)"
+        android:background="@drawable/bordermain"
+        android:padding="@dimen/_16sdp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sdp"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
+        android:layout_marginBottom="@dimen/_32sdp" />
+
+    <Button
+        android:id="@+id/setupCompleteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Complete Setup"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/purple_500"
+        android:layout_marginBottom="@dimen/_16sdp" />
+
+    <TextView
+        android:id="@+id/skipText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skip for now"
+        android:textColor="@color/purple_500"
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="bold"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="@dimen/_8sdp" />
+
+</LinearLayout>

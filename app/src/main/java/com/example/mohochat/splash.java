@@ -25,6 +25,10 @@ public class splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Apply theme before setting content view
+        SettingsActivity.applyTheme(this);
+
         setContentView(R.layout.activity_splash);
 
         logo = findViewById(R.id.logoimg);

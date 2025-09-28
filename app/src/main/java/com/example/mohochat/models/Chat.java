@@ -7,9 +7,12 @@ public class Chat {
     private String chatId;
     private String lastMessage;
     private long lastMessageTime;
+    private long timestamp;
     private Map<String, Object> participants;
     private String chatType; // private, group
     private int unreadCount;
+    private String receiverName;
+    private String receiverPhone;
 
     public Chat() {
         this.participants = new HashMap<>();
@@ -42,4 +45,13 @@ public class Chat {
 
     public int getUnreadCount() { return unreadCount; }
     public void setUnreadCount(int unreadCount) { this.unreadCount = unreadCount; }
+
+    public long getTimestamp() { return timestamp; }
+    public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
+    public String getReceiverName() { return receiverName; }
+    public void setReceiverName(String receiverName) { this.receiverName = receiverName; }
+
+    public String getReceiverPhone() { return receiverPhone; }
+    public void setReceiverPhone(String receiverPhone) { this.receiverPhone = receiverPhone; }
 }

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_56sdp"
+            android:background="@color/surface_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/_16sdp">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="@color/primary_text" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Settings"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Settings Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_16sdp">
+
+            <!-- Theme Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appearance"
+                android:textColor="@color/secondary_accent"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_12sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordermain"
+                android:orientation="vertical"
+                android:padding="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_24sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dark Mode"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/_16sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:text="Toggle between light and dark themes"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/darkModeSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:thumbTint="@color/white"
+                        app:trackTint="@color/secondary_accent" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Notifications Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notifications"
+                android:textColor="@color/secondary_accent"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_12sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordermain"
+                android:orientation="vertical"
+                android:padding="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_24sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enable Notifications"
+                            android:textColor="@color/primary_text"
+                            android:textSize="@dimen/_16sdp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:text="Receive push notifications for new messages"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/notificationsSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:thumbTint="@color/white"
+                        app:trackTint="@color/secondary_accent" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/secondary_text"
+                    android:alpha="0.2"
+                    android:layout_marginVertical="@dimen/_16sdp" />
+
+                <LinearLayout
+                    android:id="@+id/notificationSoundOption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/_12sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notification Sound"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/_16sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/currentSoundName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="Default"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/secondary_text"
+                    android:alpha="0.2"
+                    android:layout_marginVertical="@dimen/_16sdp" />
+
+                <TextView
+                    android:id="@+id/testNotificationButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/_12sdp"
+                    android:text="Test Notification"
+                    android:textColor="@color/primary_accent"
+                    android:textSize="@dimen/_16sdp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:drawableStart="@android:drawable/ic_popup_reminder"
+                    android:drawableTint="@color/primary_accent"
+                    android:drawablePadding="@dimen/_8sdp" />
+
+            </LinearLayout>
+
+            <!-- Account Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account"
+                android:textColor="@color/secondary_accent"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_12sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordermain"
+                android:orientation="vertical"
+                android:padding="@dimen/_16sdp"
+                android:layout_marginBottom="@dimen/_24sdp">
+
+                <TextView
+                    android:id="@+id/profileSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/_12sdp"
+                    android:text="Profile Settings"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/_16sdp"
+                    android:drawableEnd="@drawable/ic_arrow_back"
+                    android:drawableTint="@color/secondary_text"
+                    android:gravity="center_vertical" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/secondary_text"
+                    android:alpha="0.2"
+                    android:layout_marginVertical="@dimen/_8sdp" />
+
+                <TextView
+                    android:id="@+id/privacySettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="@dimen/_12sdp"
+                    android:text="Privacy and Security"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/_16sdp"
+                    android:drawableEnd="@drawable/ic_arrow_back"
+                    android:drawableTint="@color/secondary_text"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <!-- About Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About"
+                android:textColor="@color/secondary_accent"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:layout_marginBottom="@dimen/_12sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordermain"
+                android:orientation="vertical"
+                android:padding="@dimen/_16sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MohoChat"
+                    android:textColor="@color/primary_text"
+                    android:textSize="@dimen/_18sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:text="Version 1.0.0"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="Connect with empathy, chat with heart"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

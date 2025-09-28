@@ -3,16 +3,18 @@ package com.example.mohochat;
 public class Users {
     String profilepic, mail, userName, password, userId, lastMessage, status;
     String phoneNumber;
+    String fullName;
     boolean isOnline;
     long lastSeen;
     String about;
 
     public Users(){}
 
-    public Users(String id, String userName, String email, String password, String imageUri, String status) {
+    public Users(String id, String userName, String email, String phone, String password, String imageUri, String status) {
         this.userId = id;
         this.userName = userName;
         this.mail = email;
+        this.phoneNumber = phone;
         this.password= password;
         this.profilepic = imageUri;
         this.status = status;
@@ -85,4 +87,7 @@ public class Users {
 
     public String getAbout() { return about; }
     public void setAbout(String about) { this.about = about; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 }

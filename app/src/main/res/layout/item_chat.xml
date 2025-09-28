@@ -1,72 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/_12sdp"
-    android:background="?android:attr/selectableItemBackground">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileImage"
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
-        android:src="@drawable/ic_launcher_foreground" />
+    android:layout_marginHorizontal="@dimen/_8sdp"
+    android:layout_marginVertical="@dimen/_4sdp"
+    app:cardCornerRadius="@dimen/_12sdp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/_12sdp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="@dimen/_12sdp"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/chatName"
+        <RelativeLayout
+            android:layout_width="@dimen/_52sdp"
+            android:layout_height="@dimen/_52sdp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profileImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_launcher_foreground"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/primary_accent" />
+
+            <View
+                android:id="@+id/onlineIndicator"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/online_dot"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/chatName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chat Name"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/lastMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:text="Last message..."
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/_13sdp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat Name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_16sdp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:gravity="end">
 
-        <TextView
-            android:id="@+id/lastMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:text="Last message..."
-            android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:30"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_11sdp"
+                    android:minWidth="@dimen/_35sdp"
+                    android:gravity="end" />
+
+                <ImageView
+                    android:id="@+id/deleteButton"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:src="@android:drawable/ic_menu_delete"
+                    android:tint="@color/warning_red"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/_6sdp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp">
+
+                <TextView
+                    android:id="@+id/unreadCount"
+                    android:layout_width="@dimen/_22sdp"
+                    android:layout_height="@dimen/_22sdp"
+                    android:background="@drawable/circle_background"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12:30"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp" />
-
-        <TextView
-            android:id="@+id/unreadCount"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:background="@drawable/circle_background"
-            android:gravity="center"
-            android:text="3"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_10sdp"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -19,13 +19,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AddContactActivity extends AppCompatActivity {
 
-    private EditText emailOrPhoneInput;
-    private Button searchButton, addContactButton;
+    private EditText contactNameInput, contactPhoneInput;
+    private Button addContactButton;
     private ImageView backButton;
 
-    private DatabaseReference database;
-    private FirebaseAuth auth;
-    private Users foundUser;
+    private ContactManager contactManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,136 +35,43 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        emailOrPhoneInput = findViewById(R.id.emailOrPhoneInput);
-        searchButton = findViewById(R.id.searchButton);
+        contactNameInput = findViewById(R.id.contactNameInput);
+        contactPhoneInput = findViewById(R.id.contactPhoneInput);
         addContactButton = findViewById(R.id.addContactButton);
         backButton = findViewById(R.id.backButton);
 
-        database = FirebaseDatabase.getInstance().getReference();
-        auth = FirebaseAuth.getInstance();
-
-        addContactButton.setEnabled(false);
+        contactManager = new ContactManager(this);
     }
 
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
 
-        searchButton.setOnClickListener(v -> searchUser());
-
         addContactButton.setOnClickListener(v -> addContact());
     }
 
-    private void searchUser() {
-        String searchQuery = emailOrPhoneInput.getText().toString().trim();
-        if (searchQuery.isEmpty()) {
-            Toast.makeText(this, "Please enter email or phone number", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Search by email first
-        database.child("user").orderByChild("mail").equalTo(searchQuery)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                foundUser = userSnapshot.getValue(Users.class);
-                                if (foundUser != null && !foundUser.getUserId().equals(auth.getCurrentUser().getUid())) {
-                                    showUserFound();
-                                    return;
-                                }
-                            }
-                            searchByPhone(searchQuery);
-                        } else {
-                            searchByPhone(searchQuery);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(AddContactActivity.this, "Search failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void searchByPhone(String phoneNumber) {
-        database.child("user").orderByChild("phoneNumber").equalTo(phoneNumber)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                foundUser = userSnapshot.getValue(Users.class);
-                                if (foundUser != null && !foundUser.getUserId().equals(auth.getCurrentUser().getUid())) {
-                                    showUserFound();
-                                    return;
-                                }
-                            }
-                        }
-                        Toast.makeText(AddContactActivity.this, "User not found", Toast.LENGTH_SHORT).show();
-                        foundUser = null;
-                        addContactButton.setEnabled(false);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(AddContactActivity.this, "Search failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void showUserFound() {
-        Toast.makeText(this, "User found: " + foundUser.getUserName(), Toast.LENGTH_SHORT).show();
-        addContactButton.setEnabled(true);
-
-        // Check if already a contact
-        String currentUserId = auth.getCurrentUser().getUid();
-        database.child("contacts").child(currentUserId).child(foundUser.getUserId())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            addContactButton.setText("Already a Contact");
-                            addContactButton.setEnabled(false);
-                        } else {
-                            addContactButton.setText("Add Contact");
-                            addContactButton.setEnabled(true);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
-    }
 
     private void addContact() {
-        if (foundUser == null) {
-            Toast.makeText(this, "No user selected", Toast.LENGTH_SHORT).show();
+        String name = contactNameInput.getText().toString().trim();
+        String phone = contactPhoneInput.getText().toString().trim();
+
+        if (name.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(this, "Please enter both name and phone number", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String currentUserId = auth.getCurrentUser().getUid();
-        String contactId = database.child("contacts").child(currentUserId).push().getKey();
+        if (phone.length() < 10) {
+            Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Contact contact = new Contact(
-                contactId,
-                currentUserId,
-                foundUser.getUserId(),
-                foundUser.getUserName(),
-                foundUser.getPhoneNumber(),
-                foundUser.getProfilepic(),
-                System.currentTimeMillis()
-        );
+        // Add contact to phone contacts using ContactManager
+        boolean success = contactManager.addContactToPhone(name, phone);
 
-        database.child("contacts").child(currentUserId).child(foundUser.getUserId())
-                .setValue(contact)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(AddContactActivity.this, "Contact added successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(AddContactActivity.this, "Failed to add contact", Toast.LENGTH_SHORT).show();
-                });
+        if (success) {
+            Toast.makeText(this, "Contact added successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "Failed to add contact", Toast.LENGTH_SHORT).show();
+        }
     }
 }

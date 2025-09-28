@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main_background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_56sdp"
+        android:background="@color/surface_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_16sdp">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:tint="@color/primary_text" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Notification Sound"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_20sdp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/_8sdp"
+            android:text="Save"
+            android:textColor="@color/primary_accent"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Instructions -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_16sdp"
+        android:text="Choose a sound for new message notifications"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_14sdp" />
+
+    <!-- Sound List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/soundsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/_16sdp" />
+
+</LinearLayout>

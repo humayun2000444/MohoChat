@@ -42,6 +42,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
+    implementation("androidx.work:work-runtime:2.9.0")
     implementation("androidx.fragment:fragment:1.6.2")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     testImplementation("junit:junit:4.13.2")

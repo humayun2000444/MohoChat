@@ -1,8 +1,15 @@
 package com.example.mohochat.models;
 
 public class Contact {
-    private String contactId;
+    private String name;
+    private String phoneNumber;
+    private boolean hasApp;
     private String userId;
+    private String profilePic;
+    private String status;
+
+    // Legacy fields for backward compatibility
+    private String contactId;
     private String contactUserId;
     private String contactName;
     private String contactPhone;
@@ -11,6 +18,21 @@ public class Contact {
     private boolean isBlocked;
 
     public Contact() {}
+
+    public Contact(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.hasApp = false;
+    }
+
+    public Contact(String name, String phoneNumber, boolean hasApp, String userId, String profilePic, String status) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.hasApp = hasApp;
+        this.userId = userId;
+        this.profilePic = profilePic;
+        this.status = status;
+    }
 
     public Contact(String contactId, String userId, String contactUserId, String contactName,
                    String contactPhone, String contactProfilePic, long addedTime) {
@@ -22,6 +44,11 @@ public class Contact {
         this.contactProfilePic = contactProfilePic;
         this.addedTime = addedTime;
         this.isBlocked = false;
+
+        // Map to new fields
+        this.name = contactName;
+        this.phoneNumber = contactPhone;
+        this.profilePic = contactProfilePic;
     }
 
     // Getters and Setters
@@ -48,4 +75,20 @@ public class Contact {
 
     public boolean isBlocked() { return isBlocked; }
     public void setBlocked(boolean blocked) { isBlocked = blocked; }
+
+    // New getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public boolean isHasApp() { return hasApp; }
+    public void setHasApp(boolean hasApp) { this.hasApp = hasApp; }
+
+    public String getProfilePic() { return profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

@@ -19,15 +19,18 @@
         android:layout_height="@dimen/_12sdp"
         android:layout_alignEnd="@id/profileImage"
         android:layout_alignBottom="@id/profileImage"
-        android:background="@drawable/circle_green"
+        android:background="@drawable/online_dot"
         android:visibility="gone" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/contactInfo"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/profileImage"
+        android:layout_toStartOf="@id/smsButton"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
         android:orientation="vertical">
 
         <TextView
@@ -35,18 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contact Name"
-            android:textColor="@color/black"
+            android:textColor="@color/primary_text"
             android:textSize="@dimen/_16sdp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/contactStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:text="Last seen recently"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp" />
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/contactPhone"
@@ -54,10 +50,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
             android:text="+1234567890"
-            android:textColor="@color/black"
+            android:textColor="@color/secondary_text"
             android:textSize="@dimen/_12sdp"
-            android:visibility="gone" />
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/contactStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:text="On MohoChat"
+            android:textColor="@color/primary_accent"
+            android:textSize="@dimen/_12sdp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/smsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:text="Invite"
+        android:textSize="@dimen/_10sdp"
+        android:backgroundTint="@color/primary_accent"
+        android:textColor="@color/white"
+        android:minWidth="@dimen/_60sdp"
+        android:visibility="gone" />
 
 </RelativeLayout>

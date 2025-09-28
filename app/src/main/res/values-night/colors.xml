@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Override Colors -->
+    <color name="main_background">@color/dark_primary_background</color>
+    <color name="surface_background">@color/dark_secondary_background</color>
+    <color name="primary_text">@color/dark_primary_text</color>
+    <color name="secondary_text">@color/dark_secondary_text</color>
+</resources>

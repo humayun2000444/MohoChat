@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp">
+
+    <ImageView
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_gravity="center"
+        android:src="@android:drawable/ic_menu_delete"
+        android:tint="@color/warning_red"
+        android:layout_marginBottom="@dimen/_16sdp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Delete Chat"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_8sdp" />
+
+    <TextView
+        android:id="@+id/deleteMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Are you sure you want to delete this chat?\nAll messages will be permanently removed."
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_14sdp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="@dimen/_20sdp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="Cancel"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_14sdp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp"
+            android:backgroundTint="@color/warning_red"
+            app:cornerRadius="@dimen/_8sdp" />
+
+    </LinearLayout>
+
+</LinearLayout>
